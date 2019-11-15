@@ -92,12 +92,15 @@ function returnArgumentsArray() {
    console.log(newSum()) выведет 6
  */
 function bindFunction(fn) {
-    let arg = [];
-
+    let args = []; // для дополнительных аргументов ф-ии
+    
+    // определяем дополнительные аргументы ф-ии
     for (let i = 1; i < arguments.length; i++) 
-        arg.push(arguments[i]);
-
-    return fn.bind(null, ...arg);
+      args.push(arguments[i]);
+    
+    // вернем новую ф-ию, результатом которой будет 
+    // выполнение ф-ии fn с дополнительными аргументами
+    return () => fn(...args);    
 }
 
 export {
