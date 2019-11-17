@@ -71,8 +71,8 @@ function slice(array, from, to) {
     let newArray = [],
         length = array.length,
         start = from || 0, 
-        end = (Math.abs(to) < length) ? to : length; 
-    
+        end = ((Math.abs(to) < length) ? to : length) || length; 
+
     if (from === 0 && to === 0 || from > length) 
         return [];  
 
@@ -89,7 +89,7 @@ function slice(array, from, to) {
         else 
             end = length + to;
     }
-
+    
     for (let i=start; i<end; i++) 
         newArray.push(array[i]);
     
