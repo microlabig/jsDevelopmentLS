@@ -105,10 +105,10 @@ function slice(array, from, to) {
 function createProxy(obj) {
     return new Proxy(obj, {
         set(target, property, value, receiver) {
-            if (typeof value !== 'function' || typeof value !== 'object') {
+            if (typeof value === 'number') {
                 Reflect.set(target, property, value * value, receiver);
                 return true; // инвариант
-            } else
+            } else 
                 return false; //инвариант
         }
     });
