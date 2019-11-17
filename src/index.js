@@ -69,24 +69,25 @@ function upperProps(obj) {
  */
 function slice(array, from, to) {
     let newArray = [],
-        start = from || 0,
-        end = (Math.abs(to) < array.length) ? to : array.length;
+        length = array.length,
+        start = from || 0, 
+        end = (Math.abs(to) < length) ? to : length; 
     
-    if (from === 0 && to === 0 || from > array.length) 
+    if (from === 0 && to === 0 || from > length) 
         return [];  
 
     if (from < 0) {
-        if (Math.abs(from) > array.length) 
+        if (Math.abs(from) > length) 
             start = 0;
         else 
-            start = array.length + from;
+            start = length + from;
     }
 
     if (to < 0) {
-        if (Math.abs(to) > array.length) 
+        if (Math.abs(to) > length) 
             return [];
         else 
-            end = array.length + to;
+            end = length + to;
     }
 
     for (let i=start; i<end; i++) 
@@ -102,7 +103,15 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
-    
+    return new Proxy(obj, {
+        set(target, property, value, receiver) {
+            if (typeof value !== 'function' || typeof value !== 'object') {
+                Reflect.set(target, property, value * value, receiver);
+                return true; // инвариант
+            } else
+                return false; //инвариант
+        }
+    });
 }
 
 export {
