@@ -7,8 +7,9 @@
  Посмотрите как работает forEach и повторите это поведение для массива, который будет передан в параметре array
  */
 function forEach(array, fn) {
-    for (let i = 0; i < array.length; i++)
+    for (let i = 0; i < array.length; i++) {
         fn(array[i], i, array);
+    }
 }
 
 /*
@@ -20,8 +21,9 @@ function forEach(array, fn) {
 function map(array, fn) {
     let newArray = [];
 
-    for (let i = 0; i < array.length; i++)
+    for (let i = 0; i < array.length; i++) {
         newArray.push(fn(array[i], i, array));
+    }
 
     return newArray;
 }
@@ -38,6 +40,7 @@ function reduce(array, fn, initial) {
 
     for (; i < array.length; i++) {
         let currItem = array[i];
+
         prevItem = fn(prevItem, currItem, i, array);
     }
 
@@ -55,8 +58,11 @@ function reduce(array, fn, initial) {
 function upperProps(obj) {
     let arr = [];
 
-    for (let key in obj)
-        arr.push(key.toUpperCase());
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            arr.push(key.toUpperCase());
+        }
+    }
 
     return arr;
 }
@@ -73,25 +79,28 @@ function slice(array, from, to) {
         start = from || 0, 
         end = ((Math.abs(to) < length) ? to : length) || length; 
 
-    if (from === 0 && to === 0 || from > length) 
+    if (from === 0 && to === 0 || from > length) {
         return [];  
+    }
 
     if (from < 0) {
-        if (Math.abs(from) > length) 
+        if (Math.abs(from) > length) {
             start = 0;
-        else 
+        } else {
             start = length + from;
+        }
     }
 
     if (to < 0) {
-        if (Math.abs(to) > length) 
+        if (Math.abs(to) > length) {
             return [];
-        else 
-            end = length + to;
+        } 
+        end = length + to;
     }
     
-    for (let i=start; i<end; i++) 
+    for (let i=start; i<end; i++) {
         newArray.push(array[i]);
+    }
     
     return newArray;
 }
@@ -107,9 +116,11 @@ function createProxy(obj) {
         set(target, property, value, receiver) {
             if (typeof value === 'number') {
                 Reflect.set(target, property, value * value, receiver);
+
                 return true; // инвариант
-            } else 
-                return false; //инвариант
+            }
+
+            return false; // инвариант
         }
     });
 }
