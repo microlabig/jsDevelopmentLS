@@ -104,6 +104,7 @@ function findError(where) {
  */
 function deleteTextNodes(where) {
     const TEXT_NODE = 3;
+    
     let elements = where.childNodes;
     
     for (const element of elements) {
@@ -125,7 +126,23 @@ function deleteTextNodes(where) {
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    const TEXT_NODE = 3;
+
+    let child = where.firstChild,
+        sibling = where.nextSibling,
+        parent = where.parentNode;
     
+    if (child) { // сначала смотрим потомков
+        deleteTextNodesRecursive(child);
+    }
+
+    if (sibling) { // потом соседей
+        deleteTextNodesRecursive(sibling);
+    }
+    
+    if (where.nodeType === TEXT_NODE) {
+        parent.removeChild(where); // если узел текстовый (+ нет ни потомков, ни соседей), удаляем его
+    }
 }
 
 /*
@@ -149,6 +166,54 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
+    return (function checkRoot(where) {
+        const TEXT_NODE = 3;
+
+        let textNode = (where.nodeType === TEXT_NODE) ? 1 : 0, // проверяем на текстовый тип узла текущий where
+            obj = {
+                tags: {},
+                classes: {},
+                texts: textNode 
+            },
+            child = where.firstChild,
+            sibling = where.nextSibling;
+            
+        if (child) {
+            obj = checkRoot(child);
+        }
+    
+        if (sibling) {
+            obj = checkRoot(sibling);
+        }
+        
+        let {tags, classes, texts} = obj; // введем временные переменные
+        
+        if (where.nodeType === TEXT_NODE) {
+            texts++;
+        } else { 
+            if (where.tagName in tags) {
+                tags[where.tagName]++;
+            } else {
+                tags[where.tagName] = 1;
+            }
+            
+            let classList = where.classList;
+
+            for (let i=0; i<classList.length; i++) {    
+                if (classList[i] in classes) {
+                    classes[classList[i]]++;
+                } else {
+                    classes[classList[i]] = 1;
+                }
+            }
+        }
+
+        return {
+            tags,
+            classes,
+            texts
+        }
+    })(root.firstChild);  // не берем в расчет корневой элемент root 
 }
 
 /*
