@@ -11,6 +11,11 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
+    const newDiv = document.createElement('div');
+
+    newDiv.textContent = text;
+
+    return newDiv;
 }
 
 /*
@@ -22,6 +27,7 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
+    where.insertBefore(what, where.childNodes[0]);
 }
 
 /*
@@ -44,6 +50,17 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+    let result = [];
+
+    Array.from(where.children).reduce( (prev, curr) => {
+        if (curr.tagName === 'P') {
+            result.push(prev);
+        }
+        
+        return curr;
+    });
+
+    return result;
 }
 
 /*
@@ -66,7 +83,7 @@ function findAllPSiblings(where) {
 function findError(where) {
     var result = [];
 
-    for (var child of where.childNodes) {
+    for (var child of where.children) {
         result.push(child.innerText);
     }
 
