@@ -186,7 +186,7 @@ function collectDOMStat(root) {
             obj = checkRoot(sibling);
         }
         
-        let {tags, classes, texts} = obj; // введем временные переменные
+        let { tags, classes, texts } = obj; // введем временные переменные
         
         if (where.nodeType === TEXT_NODE) {
             texts++;
@@ -213,7 +213,7 @@ function collectDOMStat(root) {
             classes,
             texts
         }
-    })(root.firstChild);  // не берем в расчет корневой элемент root 
+    })(root.firstChild); // не берем в расчет корневой элемент root 
 }
 
 /*
@@ -249,6 +249,43 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
+    let observer = new MutationObserver( mutationRecords => {
+        
+        for (let mutation of mutationRecords) { // проверим узлы
+
+            if (mutation.addedNodes) { // если добавили node
+                for (let node of mutation.addedNodes) { 
+                    fn({
+                        type: 'insert',
+                        nodes: [node]
+                    });
+                }
+                fn({
+                    type: 'insert',
+                    nodes: mutation.addedNodes
+                });
+                
+            }
+            if (mutation.removedNodes) { // если удалили node
+                for (let node of mutation.removedNodes) { 
+                    fn({
+                        type: 'remove',
+                        nodes: [node]
+                    });
+                } 
+                fn({
+                    type: 'remove',
+                    nodes: mutation.addedNodes
+                });
+            }
+        }
+        
+    });
+
+    observer.observe(where, {
+        childList: true, // наблюдать за непосредственными детьми
+        subtree: true // неважна вложенность
+    })
 }
 
 export {
