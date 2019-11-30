@@ -45,7 +45,9 @@ function skipDefault(eventName, target) {
    emulateClick(document.querySelector('a')) // для указанного элемента должно быть сэмулировано события click
  */
 function emulateClick(target) {
-    target.click();
+    const event = new Event('click');
+    
+    target.dispatchEvent(event);
 }
 
 /*
@@ -79,6 +81,17 @@ function delegate(target, fn) {
 function once(target, fn) {
     let f = false;
     
+    target.addEventListener('click', () => {
+        if (!f) {
+            fn();
+            f = true;
+            target.removeEventListener('click', fn);
+        }
+    });
+    
+    /* 
+    let f = false;
+    
     new Promise( resolve => {
         target.addEventListener('click', () => {
             if (!f) {
@@ -91,7 +104,8 @@ function once(target, fn) {
         if (success) {
             target.removeEventListener('click', fn);
         }
-    });
+    }); 
+    */
 }
 
 export {
