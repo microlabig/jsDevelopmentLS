@@ -30,11 +30,14 @@ function loadAndSortTowns() {
 
     return new Promise(resolve => {
         const xhr = new XMLHttpRequest();
+
         xhr.open('GET', URL);
         xhr.responseType = 'json';
 
         xhr.addEventListener('load', () => {
-            resolve(xhr.response.sort((a,b) => a.name > b.name ? 1 : -1));
+            let towns = xhr.response;
+            
+            resolve(towns.sort((a, b) => a.name > b.name ? 1 : -1));
         });
         
         xhr.send();
